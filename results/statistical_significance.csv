@@ -1,0 +1,11 @@
+Condition,Comparison,F1_nnPU,F1_baseline,Delta_F1,CI_low,CI_high,p_value,Significant_95CI
+Clean,TF-nnPU vs TF-Focal,0.9018,0.9061,-0.0043,-0.0172,0.0083,0.5177,False
+Clean,TF-nnPU vs TF-WBCE,0.9018,0.8953,0.0064,-0.0079,0.0208,0.3876,False
+5% noise,TF-nnPU vs TF-Focal,0.8787,0.9039,-0.0252,-0.043,-0.0075,0.0047,True
+5% noise,TF-nnPU vs TF-WBCE,0.8787,0.9033,-0.0246,-0.04,-0.0096,0.0023,True
+10% noise,TF-nnPU vs TF-Focal,0.8687,0.8632,0.0055,-0.009,0.0204,0.47,False
+10% noise,TF-nnPU vs TF-WBCE,0.8687,0.8815,-0.0128,-0.0344,0.0091,0.2443,False
+15% noise,TF-nnPU vs TF-Focal,0.8734,0.8047,0.0687,0.0482,0.0901,0.0001,True
+15% noise,TF-nnPU vs TF-WBCE,0.8734,0.8357,0.0377,0.0151,0.0604,0.0008,True
+20% noise,TF-nnPU vs TF-Focal,0.8157,0.7306,0.0851,0.0632,0.1076,0.0001,True
+20% noise,TF-nnPU vs TF-WBCE,0.8157,0.7973,0.0184,-0.0123,0.0499,0.2314,False
