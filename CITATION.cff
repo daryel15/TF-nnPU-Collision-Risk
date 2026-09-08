@@ -1,0 +1,33 @@
+cff-version: 1.2.0
+message: "Please cite this software and the associated manuscript when using these artifacts."
+type: software
+title: "TF-nnPU Collision-Risk Reproducibility"
+version: 0.1.0
+date-released: 2026-09-08
+license: MIT
+authors:
+  - family-names: "Leon Cachott"
+    given-names: "Daryel Israel"
+  - family-names: "Ayala Molina"
+    given-names: "Ricardo Misael"
+  - family-names: "Khabbaz"
+    given-names: "Maurice J."
+  - family-names: "De Rango"
+    given-names: "Floriano"
+  - family-names: "Assi"
+    given-names: "Chadi"
+abstract: "Processed simulation data, checkpoint evaluation and temporal collision-risk training workflows under positive-unlabeled supervision."
+references:
+  - type: unpublished
+    title: "Robust Ego-Centric Collision Risk Estimation Under Positive–Unlabeled Supervision"
+    authors:
+      - family-names: "Leon Cachott"
+        given-names: "Daryel Israel"
+      - family-names: "Ayala Molina"
+        given-names: "Ricardo Misael"
+      - family-names: "Khabbaz"
+        given-names: "Maurice J."
+      - family-names: "De Rango"
+        given-names: "Floriano"
+      - family-names: "Assi"
+        given-names: "Chadi"

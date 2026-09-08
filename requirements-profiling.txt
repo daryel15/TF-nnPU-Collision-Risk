@@ -1,0 +1,3 @@
+-r requirements.txt
+# Only for profiling code shown in the historical source archive.
+thop>=0.1.1

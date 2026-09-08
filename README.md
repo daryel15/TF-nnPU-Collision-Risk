@@ -1,70 +1,84 @@
-# TF-nnPU Collision-Risk Reproducibility Repository
+# TF-nnPU collision-risk reproducibility
 
-This package consolidates the processed dataset, model checkpoints, executed research notebooks, fixed split files, corruption masks, and exported result tables used for the revised paper.
+Processed simulation data, released model weights, checkpoint evaluation, and opt-in training workflows for **Robust Ego-Centric Collision Risk Estimation Under Positive–Unlabeled Supervision**.
 
-## Repository contents
+Version **0.1.0** reproduces the supplied checkpoint and provides runnable TF, cost-sensitive, Su-LSTM, GAT, and CMPA training workflows. The historical prefix-level split and loss implementation are retained. See [method details](docs/METHOD.md) and [experiment provenance](docs/EXPERIMENTS.md) before comparing different runs.
 
-### `data/`
-- `safe_col_mix.txt`: processed 981-scenario dataset.
-- Columns: `frame, distance, angle, sin(yaw), cos(yaw), speed, label, sequence_id`.
+## Install (Python 3.11)
 
-### `checkpoints/`
-- `pretrained_encoder1.pt`: canonical Stage-1 Transformer encoder.
-- `stage2_trained_model.pt`: canonical final TF-nnPU Stage-2 checkpoint.
+Extract or clone the repository and open a terminal in this folder.
 
-### `notebooks/`
-1. `01_main_tf_nnpu_reproduction.ipynb` — clean checkpoint reproduction.
-2. `02_full_tf_nnpu_hyperparameter_sensitivity.ipynb` — full TF-nnPU research / sensitivity notebook.
-3. `03_cost_sensitive_and_significance.ipynb` — TF-nnPU vs WBCE/Focal, symmetric label-noise analysis, bootstrap/permutation statistics.
-4. `04_su_lstm_matched_selected.ipynb` — user-selected Su-LSTM baseline.
-5. `05_tf_nnpu_vs_gat.ipynb` — matched GAT comparison.
-6. `06_tf_nnpu_vs_cmpa.ipynb` — matched CMPA comparison.
+Windows PowerShell, CPU installation (activation is unnecessary):
 
-### `pipeline_raw/`
-- simulator camera/LiDAR acquisition notebook;
-- camera/LiDAR feature-extraction notebook.
+```powershell
+py -3.11 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\.venv\Scripts\python.exe -m pip install torch==2.5.1 --index-url https://download.pytorch.org/whl/cpu
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m ipykernel install --prefix .venv --name tf-nnpu --display-name "TF-nnPU (Python 3.11)"
+.\.venv\Scripts\python.exe -m tf_nnpu verify
+.\.venv\Scripts\python.exe -m tf_nnpu evaluate --device cpu
+.\.venv\Scripts\python.exe -m jupyterlab
+```
 
-These are included for transparency but are not required to reproduce the Level-1 processed-feature experiments.
+In JupyterLab, select the **TF-nnPU (Python 3.11)** kernel and open `notebooks/01_main_tf_nnpu_reproduction.ipynb`. The notebooks find the repository from either its root or the `notebooks/` directory.
 
-### `splits/`
-- `main_prefix_split_seed42.npz`: exact prefix-level 80/20 split for the main t=2..15 experiment.
-- `common_t4_t15_split_seed42.npz`: exact common t=4..15 prefix split used for the GAT/CMPA/Su-LSTM comparison.
+For NVIDIA CUDA 12.1, use the `https://download.pytorch.org/whl/cu121` index instead of `/cpu` in the torch installation command. Select `--device cuda` or the default `auto`. See the [official PyTorch 2.5.1 instructions](https://pytorch.org/get-started/previous-versions/#v251). The local validation environment used Python 3.11.3 and PyTorch 2.5.1+cu121; see [validation records](docs/VALIDATION.md) for the actual checks performed.
 
-The existing prefix-level split is intentionally preserved.
+On Linux, create the environment with `python3.11 -m venv .venv` and replace `.\.venv\Scripts\python.exe` in the commands with `.venv/bin/python`. macOS installation was not tested.
 
-### `noise_masks/`
-Exact deterministic corruption masks are exported for:
-- common current-risk P->U corruption;
-- common current-risk symmetric corruption;
-- the selected Su-LSTM scenario-outcome P->U corruption;
-- the cost-sensitive symmetric experiment.
+## Quick reproduction
 
-### `results/`
-CSV files containing the principal reported outputs.
+With the environment's Python on your PATH, run from the repository root:
 
-## Main dataset statistics
+```sh
+python -m tf_nnpu verify
+python -m tf_nnpu evaluate --device cpu
+```
 
-- 981 scenarios
-- 15 frames per scenario
-- 14,715 rows
-- 13,734 t=2..15 prefixes
-- main split: 10,987 train / 2,747 validation prefixes
-- common t=4..15 set: 11,772 prefixes
-- common split: 9,417 train / 2,355 validation prefixes
+The first command verifies file hashes, both splits, and all 16 corruption masks. The second checks the released checkpoint against these targets:
 
-## Canonical TF-nnPU checkpoint result at threshold 0.5
+| Accuracy | AUROC | Precision | Recall | F1 |
+|---:|---:|---:|---:|---:|
+| 0.960684 | 0.990302 | 0.938095 | 0.895455 | 0.916279 |
 
-- Accuracy: 0.960684
-- AUROC: 0.990302
-- Precision: 0.938095
-- Recall: 0.895455
-- F1: 0.916279
+Confusion matrix `[TN FP; FN TP]`: `[[2048, 39], [69, 591]]`. The target is the supplied observed PU endpoint label, not an independently annotated latent frame-risk label.
 
-## Environment reported by the original experiments
+Evaluation saves keyed predictions, metrics, and environment metadata in a new timestamped `outputs/` directory. Hash mismatches and unexpected metrics stop execution. Ordinary floating-point differences are allowed up to `1e-6` in reported scalar metrics.
 
-- Python 3.11.3
-- PyTorch 2.5.1 + CUDA 12.1
-- NVIDIA RTX A400
-- Windows 10
+## View results or train
 
-See `MANIFEST_SHA256.txt` for file hashes.
+Notebooks 02-06 display recorded results by default. They do not train models, fit scalers, or build caches unless `RUN_TRAINING=True`. Full reruns are explicit:
+
+```sh
+python -m experiments.run gat
+python -m experiments.run stage2 --train
+python -m experiments.run sensitivity --train
+python -m experiments.run cost_sensitive --train
+python -m experiments.run sulstm --train
+python -m experiments.run gat --train
+python -m experiments.run cmpa --train
+```
+
+For a brief execution check, append `--smoke`, for example `python -m experiments.run cmpa --train --smoke`. Smoke runs use one epoch and reduced samples; their scores are not paper results. Full training may take hours, depending on hardware. CMPA full training generates a roughly 228 MiB cache under its output directory; no simulator is required.
+
+Every training run writes new checkpoints, predictions, settings, and result tables under `outputs/`. Generated files never overwrite the released checkpoints or `results/` references. The original cost-sensitive dataset filename and historical RNG/checkpoint provenance could not all be established: new reruns are labeled accordingly rather than promised to reproduce their historical scores exactly.
+
+## Contents and scope
+
+- `data/`: 981 scenarios, 15 frames each; [data dictionary](data/README.md).
+- `checkpoints/`: original encoder, final model, expected metrics.
+- `splits/`, `noise_masks/`: fixed sample membership and corruption selections, with format documentation.
+- `tf_nnpu/`, `experiments/`: evaluation, models, training, artifact checks, and paired statistics.
+- `notebooks/`: six portable entry points.
+- `results/`: original reference CSVs, additional tables recovered from saved notebook outputs, and the newly verified main-checkpoint predictions.
+- `archive/`: historical research code as Markdown reference documents. It includes experiments requiring additional inputs and should not be executed as a complete workflow.
+- `docs/`: methodology, provenance, release changes, and validation.
+
+Physical-QCar feature sequences, event/frame metadata, raw sensor recordings, YOLO weights, and QLabs scene/control assets were not supplied. This release does not claim to regenerate those experiments. See [remaining inputs](docs/MISSING_ASSETS.md).
+
+## Citation, licensing, and contact
+
+Use [CITATION.cff](CITATION.cff) to cite the software and associated manuscript. No DOI or journal acceptance information is invented. Original software is under the [MIT license](LICENSE); supplied data, weights, and numerical result artifacts are under [CC BY 4.0](DATA_LICENSE.md). Third-party software retains its own license.
+
+Author contact: Daryel Israel Leon Cachott, `daryel.leon@hotmail.com`. After publication on GitHub, issues can be used for reproducibility questions.
