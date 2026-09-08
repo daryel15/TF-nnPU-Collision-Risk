@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+outputs/
+.pytest_cache/
+cmpa_red_dsm_cache_uint8.npy
+*.log
+.DS_Store
+Thumbs.db
