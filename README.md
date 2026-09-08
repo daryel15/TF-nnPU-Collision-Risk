@@ -30,22 +30,6 @@ Each row contains:
 
 `frame, distance, angle, sin(yaw), cos(yaw), relative-speed-magnitude, frame-label, sequence-id`
 
-The loader groups by sequence ID and explicitly sorts each sequence by frame index before prefix construction.
-
-## Original split — intentionally preserved
-
-The reproduction notebook uses the original protocol exactly:
-
-```python
-sup_ds = CurrentRiskPrefixDataset(DATA_PATH, min_len=2, max_len=None)
-torch.manual_seed(42)
-n_train = int(0.8 * len(sup_ds))
-n_val = len(sup_ds) - n_train
-train_ds, val_ds = random_split(sup_ds, [n_train, n_val])
-```
-
-No scenario-level restructuring is introduced in this Level-1 package.
-
 Expected counts:
 
 - 981 sequences
