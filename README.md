@@ -2,7 +2,7 @@
 
 Processed simulation data, released model weights, checkpoint evaluation, and opt-in training workflows for **Robust Ego-Centric Collision Risk Estimation Under Positive–Unlabeled Supervision**.
 
-Version **0.1.0** reproduces the supplied checkpoint and provides runnable TF, cost-sensitive, Su-LSTM, GAT, and CMPA training workflows. The historical prefix-level split and loss implementation are retained. See [method details](docs/METHOD.md) and [experiment provenance](docs/EXPERIMENTS.md) before comparing different runs.
+Version **0.1.0** reproduces the supplied checkpoint and provides runnable TF, cost-sensitive, Su-LSTM, GAT, and CMPA training workflows. See [method details](docs/METHOD.md) and [experiment provenance](docs/EXPERIMENTS.md) before comparing different runs.
 
 ## Install (Python 3.11)
 
