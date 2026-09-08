@@ -42,19 +42,6 @@ Exact deterministic corruption masks are exported for:
 ### `results/`
 CSV files containing the principal reported outputs.
 
-## Important Su-LSTM note
-
-The selected Su-LSTM notebook follows the fully supervised scenario-outcome formulation:
-`Y_m = max_t s_t^m` is assigned to every prefix from a scenario during Su-LSTM training.
-
-The notebook reports:
-- `current_risk_f1`: evaluation against endpoint label `s_t`;
-- `scenario_outcome_f1`: evaluation against `Y_m`.
-
-Only the current-risk metric should be used when plotting Su-LSTM next to the current-risk TF/GAT/CMPA curves.
-
-Because Su-LSTM uses baseline-specific scenario-outcome supervision, its P->U corruption removes positives from a different positive-label pool than the GAT/CMPA current-risk experiment. The repository therefore describes the SOTA comparison as a matched data/split/endpoints comparison with baseline-specific supervision, not as an identical corruption-mask comparison across every model.
-
 ## Main dataset statistics
 
 - 981 scenarios
