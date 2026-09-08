@@ -1,0 +1,62 @@
+[
+  {
+    "file": "hyperparameter_sensitivity.csv",
+    "source_notebook": "02",
+    "zero_based_cell": 84,
+    "precision": "as displayed in saved HTML output; not raw full-precision logs"
+  },
+  {
+    "file": "calibration_by_prefix.csv",
+    "source_notebook": "02",
+    "zero_based_cell": 88,
+    "precision": "as displayed in saved HTML output; not raw full-precision logs"
+  },
+  {
+    "file": "calibration_summary.csv",
+    "source_notebook": "02",
+    "zero_based_cell": 90,
+    "precision": "as displayed in saved HTML output; not raw full-precision logs"
+  },
+  {
+    "file": "su_lstm_full.csv",
+    "source_notebook": "04",
+    "zero_based_cell": 10,
+    "precision": "as displayed in saved HTML output; not raw full-precision logs"
+  },
+  {
+    "file": "gat_clean.csv",
+    "source_notebook": "05",
+    "zero_based_cell": 38,
+    "precision": "as displayed in saved HTML output; not raw full-precision logs"
+  },
+  {
+    "file": "gat_all_noise_f1.csv",
+    "source_notebook": "05",
+    "zero_based_cell": 40,
+    "precision": "as displayed in saved HTML output; not raw full-precision logs"
+  },
+  {
+    "file": "gat_all_conditions.csv",
+    "source_notebook": "05",
+    "zero_based_cell": 42,
+    "precision": "as displayed in saved HTML output; not raw full-precision logs"
+  },
+  {
+    "file": "cmpa_clean.csv",
+    "source_notebook": "06",
+    "zero_based_cell": 44,
+    "precision": "as displayed in saved HTML output; not raw full-precision logs"
+  },
+  {
+    "file": "cmpa_all_noise_f1.csv",
+    "source_notebook": "06",
+    "zero_based_cell": 46,
+    "precision": "as displayed in saved HTML output; not raw full-precision logs"
+  },
+  {
+    "file": "cmpa_all_conditions.csv",
+    "source_notebook": "06",
+    "zero_based_cell": 48,
+    "precision": "as displayed in saved HTML output; not raw full-precision logs"
+  }
+]

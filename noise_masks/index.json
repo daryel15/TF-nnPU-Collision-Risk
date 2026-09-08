@@ -1,0 +1,98 @@
+[
+  {
+    "group": "common_current_risk",
+    "mode": "p_to_u",
+    "rate": 0.05,
+    "seed": 5042
+  },
+  {
+    "group": "common_current_risk",
+    "mode": "p_to_u",
+    "rate": 0.1,
+    "seed": 6042
+  },
+  {
+    "group": "common_current_risk",
+    "mode": "p_to_u",
+    "rate": 0.15,
+    "seed": 7042
+  },
+  {
+    "group": "common_current_risk",
+    "mode": "p_to_u",
+    "rate": 0.2,
+    "seed": 8042
+  },
+  {
+    "group": "common_current_risk",
+    "mode": "symmetric",
+    "rate": 0.05,
+    "seed": 1042
+  },
+  {
+    "group": "common_current_risk",
+    "mode": "symmetric",
+    "rate": 0.1,
+    "seed": 2042
+  },
+  {
+    "group": "common_current_risk",
+    "mode": "symmetric",
+    "rate": 0.15,
+    "seed": 3042
+  },
+  {
+    "group": "common_current_risk",
+    "mode": "symmetric",
+    "rate": 0.2,
+    "seed": 4042
+  },
+  {
+    "group": "cost_sensitive_symmetric",
+    "mode": "symmetric",
+    "rate": 0.05,
+    "seed": 123
+  },
+  {
+    "group": "cost_sensitive_symmetric",
+    "mode": "symmetric",
+    "rate": 0.1,
+    "seed": 123
+  },
+  {
+    "group": "cost_sensitive_symmetric",
+    "mode": "symmetric",
+    "rate": 0.15,
+    "seed": 123
+  },
+  {
+    "group": "cost_sensitive_symmetric",
+    "mode": "symmetric",
+    "rate": 0.2,
+    "seed": 123
+  },
+  {
+    "group": "su_lstm_outcome",
+    "mode": "p_to_u",
+    "rate": 0.05,
+    "seed": 1042
+  },
+  {
+    "group": "su_lstm_outcome",
+    "mode": "p_to_u",
+    "rate": 0.1,
+    "seed": 2042
+  },
+  {
+    "group": "su_lstm_outcome",
+    "mode": "p_to_u",
+    "rate": 0.15,
+    "seed": 3042
+  },
+  {
+    "group": "su_lstm_outcome",
+    "mode": "p_to_u",
+    "rate": 0.2,
+    "seed": 4042
+  }
+]
