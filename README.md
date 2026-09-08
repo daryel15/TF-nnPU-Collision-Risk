@@ -1,78 +1,71 @@
-# TF-nnPU Level-1 Reproducibility Package
+# TF-nnPU Collision-Risk Reproducibility Repository
 
-This package reproduces the processed-feature-level TF-nnPU experiment from:
+This package consolidates the processed dataset, model checkpoints, executed research notebooks, fixed split files, corruption masks, and exported result tables used for the revised paper.
 
-**Robust Ego-Centric Collision Risk Estimation Under Positive–Unlabeled Supervision**
+## Repository contents
 
-## Scope
+### `data/`
+- `safe_col_mix.txt`: processed 981-scenario dataset.
+- Columns: `frame, distance, angle, sin(yaw), cos(yaw), speed, label, sequence_id`.
 
-Level 1 starts from the processed temporal dataset and reproduces:
+### `checkpoints/`
+- `pretrained_encoder1.pt`: canonical Stage-1 Transformer encoder.
+- `stage2_trained_model.pt`: canonical final TF-nnPU Stage-2 checkpoint.
 
-1. data loading and scenario sorting;
-2. causal prefix generation;
-3. the original 80/20 random prefix split;
-4. checkpoint-based TF-nnPU evaluation;
-5. optional Stage-2 retraining from the canonical pretrained encoder.
+### `notebooks/`
+1. `01_main_tf_nnpu_reproduction.ipynb` — clean checkpoint reproduction.
+2. `02_full_tf_nnpu_hyperparameter_sensitivity.ipynb` — full TF-nnPU research / sensitivity notebook.
+3. `03_cost_sensitive_and_significance.ipynb` — TF-nnPU vs WBCE/Focal, symmetric label-noise analysis, bootstrap/permutation statistics.
+4. `04_su_lstm_matched_selected.ipynb` — user-selected Su-LSTM baseline.
+5. `05_tf_nnpu_vs_gat.ipynb` — matched GAT comparison.
+6. `06_tf_nnpu_vs_cmpa.ipynb` — matched CMPA comparison.
 
-The simulator, raw camera/LiDAR acquisition, YOLO detections, and physical-QCar raw data are intentionally outside Level 1.
+### `pipeline_raw/`
+- simulator camera/LiDAR acquisition notebook;
+- camera/LiDAR feature-extraction notebook.
 
-## Canonical files
+These are included for transparency but are not required to reproduce the Level-1 processed-feature experiments.
 
-- `data/safe_col_mix.txt`
-- `checkpoints/pretrained_encoder1.pt`
-- `checkpoints/stage2_trained_model.pt`
+### `splits/`
+- `main_prefix_split_seed42.npz`: exact prefix-level 80/20 split for the main t=2..15 experiment.
+- `common_t4_t15_split_seed42.npz`: exact common t=4..15 prefix split used for the GAT/CMPA/Su-LSTM comparison.
 
-SHA-256 hashes are stored in `expected_results.json`.
+The existing prefix-level split is intentionally preserved.
 
-## Dataset columns
+### `noise_masks/`
+Exact deterministic corruption masks are exported for:
+- common current-risk P->U corruption;
+- common current-risk symmetric corruption;
+- the selected Su-LSTM scenario-outcome P->U corruption;
+- the cost-sensitive symmetric experiment.
 
-Each row contains:
+### `results/`
+CSV files containing the principal reported outputs.
 
-`frame, distance, angle, sin(yaw), cos(yaw), relative-speed-magnitude, frame-label, sequence-id`
+## Important Su-LSTM note
 
-Expected counts:
+The selected Su-LSTM notebook follows the fully supervised scenario-outcome formulation:
+`Y_m = max_t s_t^m` is assigned to every prefix from a scenario during Su-LSTM training.
 
-- 981 sequences
-- 15 frames per sequence
-- 13,734 prefixes
-- 10,987 training prefixes
-- 2,747 validation prefixes
-- 2,717 positive training prefixes
-- 660 positive validation prefixes
+The notebook reports:
+- `current_risk_f1`: evaluation against endpoint label `s_t`;
+- `scenario_outcome_f1`: evaluation against `Y_m`.
 
-## Model
+Only the current-risk metric should be used when plotting Su-LSTM next to the current-risk TF/GAT/CMPA curves.
 
-Transformer temporal encoder:
+Because Su-LSTM uses baseline-specific scenario-outcome supervision, its P->U corruption removes positives from a different positive-label pool than the GAT/CMPA current-risk experiment. The repository therefore describes the SOTA comparison as a matched data/split/endpoints comparison with baseline-specific supervision, not as an identical corruption-mask comparison across every model.
 
-- input dimension: 5
-- `d_model`: 64
-- heads: 4
-- encoder layers: 2
-- feed-forward dimension: 128
-- dropout: 0.1
-- maximum positional length: 500
+## Main dataset statistics
 
-Temporal attention pooling is followed by:
+- 981 scenarios
+- 15 frames per scenario
+- 14,715 rows
+- 13,734 t=2..15 prefixes
+- main split: 10,987 train / 2,747 validation prefixes
+- common t=4..15 set: 11,772 prefixes
+- common split: 9,417 train / 2,355 validation prefixes
 
-`LayerNorm(64) -> Linear(64,64) -> ReLU -> Dropout(0.1) -> Linear(64,1)`
-
-## Stage-2 TF-nnPU settings
-
-- positive prior: 0.10
-- AdamW
-- learning rate: `1e-4`
-- weight decay: `1e-4`
-- batch size: 32
-- validation batch size: 64
-- maximum epochs: 200
-- early stopping metric: validation F1
-- patience: 8
-- minimum improvement: `1e-3`
-- classification threshold: 0.5
-
-## Exact checkpoint reproduction
-
-Running `reproduce_level1.ipynb` with the included final Stage-2 checkpoint should produce approximately:
+## Canonical TF-nnPU checkpoint result at threshold 0.5
 
 - Accuracy: 0.960684
 - AUROC: 0.990302
@@ -80,28 +73,11 @@ Running `reproduce_level1.ipynb` with the included final Stage-2 checkpoint shou
 - Recall: 0.895455
 - F1: 0.916279
 
-Confusion matrix `[TN FP; FN TP]`:
-
-```text
-[[2048, 39],
- [  69, 591]]
-```
-
-Small floating-point differences can occur across PyTorch/CUDA platforms, but thresholded predictions should normally remain stable.
-
-## Optional retraining
-
-The notebook includes Stage-2 training code initialized from `pretrained_encoder1.pt`. The released final checkpoint is the canonical artifact for exact numerical reproduction of the reported trained model.
-
-The historical research notebook did not fully isolate every random-number-generator state before Stage-2 head initialization. Therefore, a new from-scratch training run is expected to reproduce the methodology and comparable performance, not necessarily the exact byte-identical final checkpoint.
-
-## Environment
-
-The original experiments reported:
+## Environment reported by the original experiments
 
 - Python 3.11.3
 - PyTorch 2.5.1 + CUDA 12.1
 - NVIDIA RTX A400
 - Windows 10
 
-CPU evaluation of the released checkpoint is also supported.
+See `MANIFEST_SHA256.txt` for file hashes.
